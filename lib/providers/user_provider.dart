@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class UserProvider extends ChangeNotifier{
 
-  late UserModel _userModel;
+  UserModel _userModel;
 
   UserModel get user => _userModel;
 

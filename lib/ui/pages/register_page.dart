@@ -1,7 +1,12 @@
 import 'package:email_validator/email_validator.dart';
 import 'package:findmyjob/constants/theme.dart';
+import 'package:findmyjob/models/user_model.dart';
+import 'package:findmyjob/providers/auth_provider.dart';
+import 'package:findmyjob/providers/user_provider.dart';
 import 'package:findmyjob/ui/pages/onboarding_page.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:provider/provider.dart';
 
 class RegisterPage extends StatefulWidget {
   @override
@@ -12,12 +17,16 @@ class _RegisterPageState extends State<RegisterPage> {
   TextEditingController nameController = TextEditingController(text: '');
   TextEditingController emailController = TextEditingController(text: '');
   TextEditingController passwordController = TextEditingController(text: '');
-  TextEditingController motivationController = TextEditingController(text: '');
+  TextEditingController goalController = TextEditingController(text: '');
+  bool isLoading = false;
 
   @override
   Widget build(BuildContext context) {
+    var authProvider = Provider.of<AuthProvider>(context);
+    var userProvider = Provider.of<UserProvider>(context);
+
     return WillPopScope(
-      onWillPop: () async{
+      onWillPop: () async {
         Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
         return true;
       },
@@ -224,7 +233,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           height: 8,
                         ),
                         TextField(
-                          controller: motivationController,
+                          controller: goalController,
                           cursorColor: blackColor,
                           onChanged: (value) {
                             setState(() {});
@@ -258,18 +267,47 @@ class _RegisterPageState extends State<RegisterPage> {
                     height: 30,
                   ),
                   Center(
-                    child: FloatingActionButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, '/register');
-                      },
-                      backgroundColor: mainColor,
-                      shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.all(Radius.circular(15))),
-                      child: Icon(
-                        Icons.arrow_forward,
-                        size: 30,
-                      ),
-                    ),
+                    child: isLoading
+                        ? SpinKitSquareCircle(
+                            size: 50,
+                            color: mainColor,
+                          )
+                        : FloatingActionButton(
+                            onPressed: () async {
+                              setState(() {
+                                isLoading = true;
+                              });
+
+                              LoginRegisterResult result =
+                                  await authProvider.register(
+                                      emailController.text,
+                                      passwordController.text,
+                                      nameController.text,
+                                      goalController.text);
+
+                              if (result.userModel == null) {
+                                setState(() {
+                                  isLoading = false;
+                                });
+                                ScaffoldMessenger.of(context).showSnackBar(
+                                    SnackBar(
+                                        backgroundColor: mainColor,
+                                        content: Text(result.message, style: whiteTextFont,)));
+                              } else {
+                                userProvider.user = result.userModel;
+                                Navigator.pushNamedAndRemoveUntil(
+                                    context, '/home', (route) => false);
+                              }
+                            },
+                            backgroundColor: mainColor,
+                            shape: RoundedRectangleBorder(
+                                borderRadius:
+                                    BorderRadius.all(Radius.circular(15))),
+                            child: Icon(
+                              Icons.arrow_forward,
+                              size: 30,
+                            ),
+                          ),
                   ),
                   SizedBox(
                     height: 20,
