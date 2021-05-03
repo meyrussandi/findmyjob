@@ -9,17 +9,45 @@ class AuthProvider with ChangeNotifier {
 
 
   Future<LoginRegisterResult> register(
-      String email, String pasword, String name, String goal) async {
+      String email, String password, String name, String goal) async {
     try {
       var body = {
         'email': email,
-        'password': pasword,
+        'password': password,
         'name': name,
         'goal': goal,
       };
 
       var respone =
           await http.post(Uri.parse(baseUrl + "register"), body: body);
+
+      print("response status : " + respone.statusCode.toString());
+      print("response body : " + respone.body);
+
+      if(respone.statusCode == 200){
+        print("masuk");
+        UserModel userModel = UserModel.fromJson(jsonDecode(respone.body));
+        return LoginRegisterResult(userModel: userModel);
+      }else{
+        print("masuk else");
+        return LoginRegisterResult(message: respone.body.split('"')[3]);
+      }
+    } catch (e) {
+      print(e);
+      return LoginRegisterResult(message: e.toString());
+    }
+  }
+
+  Future<LoginRegisterResult> login(
+      String email, String password,) async {
+    try {
+      var body = {
+        'email': email,
+        'password': password,
+      };
+
+      var respone =
+      await http.post(Uri.parse(baseUrl + "login"), body: body);
 
       print("response status : " + respone.statusCode.toString());
       print("response body : " + respone.body);

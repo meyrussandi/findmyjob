@@ -1,4 +1,5 @@
 import 'package:findmyjob/providers/auth_provider.dart';
+import 'package:findmyjob/providers/category_provider.dart';
 import 'package:findmyjob/providers/user_provider.dart';
 import 'package:findmyjob/ui/pages/home_page.dart';
 import 'package:findmyjob/ui/pages/login_page.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
       providers: [
         ChangeNotifierProvider<UserProvider>(create: (context) => UserProvider()),
         ChangeNotifierProvider<AuthProvider>(create: (context) => AuthProvider()),
+        ChangeNotifierProvider<CategoryProvider>(create: (context) => CategoryProvider()),
       ],
       child: MaterialApp(
         debugShowCheckedModeBanner: false,

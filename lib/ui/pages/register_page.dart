@@ -273,7 +273,7 @@ class _RegisterPageState extends State<RegisterPage> {
                             color: mainColor,
                           )
                         : FloatingActionButton(
-                            onPressed: () async {
+                            onPressed: nameController.text.isEmpty || emailController.text.isEmpty || passwordController.text.isEmpty?null :() async {
                               setState(() {
                                 isLoading = true;
                               });
@@ -299,7 +299,7 @@ class _RegisterPageState extends State<RegisterPage> {
                                     context, '/home', (route) => false);
                               }
                             },
-                            backgroundColor: mainColor,
+                            backgroundColor: nameController.text.isEmpty || emailController.text.isEmpty || passwordController.text.isEmpty?greyColor:mainColor,
                             shape: RoundedRectangleBorder(
                                 borderRadius:
                                     BorderRadius.all(Radius.circular(15))),
