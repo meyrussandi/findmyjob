@@ -123,10 +123,7 @@ class HomePage extends StatelessWidget {
                                   right: index == snapshot.data.length
                                       ? defaultMargin
                                       : 0),
-                              child: HotCategoriesCard(
-                                name: category.name,
-                                urlImage: category.imageUrl,
-                              ),
+                              child: HotCategoriesCard(category),
                             );
                           }).toList(),
                         );
@@ -161,12 +158,7 @@ class HomePage extends StatelessWidget {
                                 left: defaultMargin,
                                 right: defaultMargin,
                                 top: index != 0 ? 16 : 0),
-                            child: JobCard(
-                              title: e.name,
-                              location: e.location,
-                              companyLogo: e.companyLogo,
-                              companyName: e.companyName,
-                            ),
+                            child: JobCard(e),
                           );
                         }).toList(),
                       );
@@ -177,7 +169,9 @@ class HomePage extends StatelessWidget {
                       );
                     }
                   }),
-              SizedBox(height: 50,)
+              SizedBox(
+                height: 50,
+              )
             ],
           )
         ],
